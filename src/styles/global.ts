@@ -9,7 +9,7 @@ export const GlobalStyles = createGlobalStyle`
 
   :focus {
     outline: 0;
-    box-shadow: 0 0 0 2px ${(props) => props.theme["green-300"]};
+    /* box-shadow: 0 0 0 2px ${(props) => props.theme["green-300"]}; */
   }
 
   body {
@@ -18,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
   }
 
-  border-style, input-security, textarea, button {
+  border-style, input-security, textarea, button, span {
     font: 400 1rem Roboto, sans-serif;
   }
 `;
