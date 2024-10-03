@@ -9,7 +9,6 @@ export function SignIn() {
         <span>Cadastrar</span>
         <ArrowRight className="icon" />
       </Link>
-
       <form>
         <label>
           <span>Email</span>

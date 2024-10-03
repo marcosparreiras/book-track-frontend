@@ -5,11 +5,10 @@ import { ArrowRight } from "phosphor-react";
 export function SignUp() {
   return (
     <AuthFormContainer>
-      <Link to="/">
+      <Link to="/signin">
         <span>Entrar</span>
         <ArrowRight className="icon" />
       </Link>
-
       <form>
         <label>
           <span>Nome</span>
