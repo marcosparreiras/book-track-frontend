@@ -39,9 +39,16 @@ export const CardsContainer = styled.div`
 
 export const BookCard = styled.div`
   width: 280px;
-  height: 450px;
-  padding: 0.3rem;
+  height: 410px;
+  padding: 0.3rem 0.5rem;
   background-color: ${(props) => props.theme["gray-700"]};
+
+  &:hover {
+    img {
+      opacity: 1;
+      filter: brightness(1.5);
+    }
+  }
 
   img {
     width: 80%;
@@ -49,6 +56,8 @@ export const BookCard = styled.div`
     object-fit: cover;
     display: block;
     margin-inline: auto;
+    opacity: 0.8;
+    transition: 100ms;
   }
 
   h2 {
@@ -56,8 +65,28 @@ export const BookCard = styled.div`
     margin-bottom: 0.5rem;
   }
 
-  > span {
+  > a {
+    text-decoration: none;
+    text-align: center;
     display: block;
     margin-top: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+    color: ${(props) => props.theme.white};
+    background: ${(props) => props.theme["green-500"]};
+    border: none;
+    padding: 0.3rem;
+    transition: 500ms;
   }
+
+  > a:hover {
+    background: ${(props) => props.theme["green-300"]};
+  }
+`;
+
+export const BookInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: ${(props) => props.theme["gray-300"]};
 `;

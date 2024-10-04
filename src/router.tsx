@@ -4,6 +4,8 @@ import { AuthLayout } from "./pages/_layouts/auth-layout";
 import { SignUp } from "./pages/auth/sign-up";
 import { Home } from "./pages/app/home";
 import { AppLayout } from "./pages/_layouts/app-layout";
+import { BookCreate } from "./pages/app/book-create";
+import { BookEdit } from "./pages/app/book-edit";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/book/create",
+        element: <BookCreate />,
+      },
+      {
+        path: "/book/:bookId/edit",
+        element: <BookEdit />,
       },
     ],
   },
