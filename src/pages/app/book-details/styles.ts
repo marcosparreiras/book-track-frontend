@@ -63,9 +63,14 @@ export const CommentContainer = styled.div`
     gap: 1rem;
     align-items: end;
 
-    textarea {
+    > div {
       width: 95%;
       max-width: 600px;
+    }
+
+    textarea {
+      margin-top: 0.5rem;
+      width: 100%;
       min-height: 100px;
       padding: 1rem;
       background: none;
@@ -103,8 +108,10 @@ export const Comment = styled.div`
     border: 2px solid ${(props) => props.theme["green-700"]};
     object-fit: cover;
   }
+`;
 
-  span {
-    display: block;
-  }
+export const CommentHeader = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
