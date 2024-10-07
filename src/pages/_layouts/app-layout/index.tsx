@@ -96,7 +96,7 @@ export function AppLayout() {
                     required
                     disabled
                   />
-                  <button type="submit" disabled={isLoading}>
+                  <button type="submit" disabled={isLoading || file === null}>
                     {isLoading ? "Alterando..." : "Alterar"}
                   </button>
                 </form>

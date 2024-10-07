@@ -1,9 +1,17 @@
-import { Calendar, IdentificationBadge, MagnifyingGlass } from "phosphor-react";
+import {
+  Calendar,
+  CaretLeft,
+  CaretRight,
+  IdentificationBadge,
+  MagnifyingGlass,
+} from "phosphor-react";
 import {
   BookCard,
   BookInfo,
   CardsContainer,
   HomeContainer,
+  HomeSettings,
+  PageNavigation,
   SearchBar,
 } from "./styles";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,19 +40,40 @@ export function Home() {
       setPage(data.page);
       setPageSize(data.pageSize);
     });
-  }, [titleSearch, setBooks, setPage, setPageSize]);
+  }, [titleSearch, page, setBooks, setPage, setPageSize]);
 
   return (
     <HomeContainer>
-      <SearchBar>
-        <MagnifyingGlass size={24} />
-        <input
-          type="text"
-          placeholder="Busque por títulos"
-          value={titleSearch}
-          onChange={(e) => setTitleSearch(e.target.value)}
-        />
-      </SearchBar>
+      <HomeSettings>
+        <SearchBar>
+          <MagnifyingGlass size={24} />
+          <input
+            type="text"
+            placeholder="Busque por títulos"
+            value={titleSearch}
+            onChange={(e) => setTitleSearch(e.target.value)}
+          />
+        </SearchBar>
+        <PageNavigation>
+          <span>Página: {page}</span>
+          <CaretLeft
+            size={24}
+            onClick={() => {
+              if (page > 1) {
+                setPage((prev) => prev - 1);
+              }
+            }}
+          />
+          <CaretRight
+            size={24}
+            onClick={() => {
+              if (books.length === pageSize) {
+                setPage((prev) => prev + 1);
+              }
+            }}
+          />
+        </PageNavigation>
+      </HomeSettings>
       <CardsContainer>
         {books.length > 0 &&
           books.map((book) => (
@@ -59,7 +88,7 @@ export function Home() {
                 <Calendar size={18} />
                 <span>{new Date(book.publishedAt).getFullYear()}</span>
               </BookInfo>
-              <Link to="/book/12">Ver detalhes</Link>
+              <Link to={`/book/${book.id}`}>Ver detalhes</Link>
             </BookCard>
           ))}
       </CardsContainer>

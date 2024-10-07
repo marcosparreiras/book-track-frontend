@@ -34,7 +34,7 @@ export function BookEdit() {
           </label>
           <textarea placeholder="descrição" />
           <ButtonContainer>
-            <Link to="/book/12">Cancelar</Link>
+            <Link to="..">Cancelar</Link>
             <button type="submit">Editar</button>
           </ButtonContainer>
         </BookContentContainer>

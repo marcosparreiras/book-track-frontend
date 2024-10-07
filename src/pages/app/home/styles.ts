@@ -5,6 +5,14 @@ export const HomeContainer = styled.div`
   padding: 1rem;
 `;
 
+export const HomeSettings = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+`;
+
 export const SearchBar = styled.label`
   cursor: pointer;
   display: flex;
@@ -25,6 +33,16 @@ export const SearchBar = styled.label`
     width: 100%;
     background: none;
     border: none;
+  }
+`;
+
+export const PageNavigation = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  svg:hover {
+    color: ${(props) => props.theme["green-500"]};
   }
 `;
 

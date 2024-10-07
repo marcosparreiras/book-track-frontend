@@ -6,6 +6,10 @@ export const BookDetailsContainer = styled.div`
   display: flex;
   gap: 2rem;
 
+  > div {
+    flex-grow: 1;
+  }
+
   img {
     width: 95%;
     max-width: 300px;
@@ -100,6 +104,7 @@ export const Comment = styled.div`
   gap: 1rem;
   background-color: ${(props) => props.theme["gray-700"]};
   padding: 0.5rem;
+  align-items: center;
 
   img {
     height: 50px;
@@ -107,6 +112,20 @@ export const Comment = styled.div`
     border-radius: 100%;
     border: 2px solid ${(props) => props.theme["green-700"]};
     object-fit: cover;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: ${(props) => props.theme["red-700"]};
+    border: none;
+    color: ${(props) => props.theme["gray-100"]};
+    padding: 0.5rem;
+    margin-left: auto;
+    height: fit-content;
+  }
+
+  button:hover {
+    background-color: ${(props) => props.theme["red-500"]};
   }
 `;
 
