@@ -41,18 +41,22 @@ export const BookCard = styled.div`
   width: 280px;
   height: 410px;
   padding: 0.3rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   background-color: ${(props) => props.theme["gray-700"]};
 
   &:hover {
     img {
       opacity: 1;
-      filter: brightness(1.5);
+      filter: brightness(1.1);
     }
   }
 
   img {
     width: 80%;
     height: auto;
+    max-height: 270px;
     object-fit: cover;
     display: block;
     margin-inline: auto;
