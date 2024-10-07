@@ -7,10 +7,19 @@ import {
   BookContainer,
   CommentHeader,
 } from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RateStars } from "../../../components/rate-stars";
+import { useUserContext } from "../../../contexts/user";
+import { useEffect } from "react";
 
 export function BookDetails() {
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null) {
+      navigate("/signin");
+    }
+  }, [navigate, user]);
   return (
     <BookDetailsContainer>
       <img

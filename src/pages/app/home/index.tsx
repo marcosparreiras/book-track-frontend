@@ -6,9 +6,18 @@ import {
   HomeContainer,
   SearchBar,
 } from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserContext } from "../../../contexts/user";
+import { useEffect } from "react";
 
 export function Home() {
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null) {
+      navigate("/signin");
+    }
+  }, [navigate, user]);
   return (
     <HomeContainer>
       <SearchBar>
@@ -16,8 +25,8 @@ export function Home() {
         <input type="text" placeholder="Busque por títulos" />
       </SearchBar>
       <CardsContainer>
-        {Array.from({ length: 10 }).map((_) => (
-          <BookCard>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <BookCard key={index}>
             <img
               src="https://m.media-amazon.com/images/I/41wMB8pUTwL._SX342_SY445_.jpg"
               alt=""

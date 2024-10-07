@@ -1,18 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AuthFormContainer } from "../../_layouts/auth-layout/styles";
 import { ArrowRight } from "phosphor-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../api";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import { useUserContext } from "../../../contexts/user";
 
 export function SignUp() {
+  const navigate = useNavigate();
+  const { user } = useUserContext();
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

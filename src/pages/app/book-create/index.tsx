@@ -4,8 +4,18 @@ import {
   BookImageContainer,
 } from "./styles";
 import DefaultBookImg from "../../../assets/default-book.png";
+import { useUserContext } from "../../../contexts/user";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export function BookCreate() {
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null) {
+      navigate("/signin");
+    }
+  }, [navigate, user]);
   return (
     <BookCreateContainer>
       <form>

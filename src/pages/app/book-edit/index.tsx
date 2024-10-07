@@ -5,9 +5,18 @@ import {
   ButtonContainer,
 } from "./styles";
 import DefaultBookImg from "../../../assets/default-book.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserContext } from "../../../contexts/user";
+import { useEffect } from "react";
 
 export function BookEdit() {
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null) {
+      navigate("/signin");
+    }
+  }, [navigate, user]);
   return (
     <BookEditContainer>
       <form>
