@@ -2,84 +2,78 @@ import { Calendar, IdentificationBadge } from "phosphor-react";
 import {
   BookDetailsContainer,
   CommentContainer,
-  Comment,
   InfoItem,
   BookContainer,
-  CommentHeader,
   AdminCommands,
 } from "./styles";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RateStars } from "../../../components/rate-stars";
 import { useUserContext } from "../../../contexts/user";
 import React, { useEffect, useState } from "react";
-import api from "../../../api";
 import DefaultBookImage from "../../../assets/default-book.png";
-import DefaultAvatarImage from "../../../assets/profile.png";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/use-auth";
+import {
+  deleteBook,
+  fetchBookWithComments,
+  type BookWithComments,
+} from "../../../api/bookResource";
+import { createComment, deleteComment } from "../../../api/commentsResource";
+import { Comment } from "../../../components/comment";
 
 export function BookDetails() {
   useAuth("user");
   const { user } = useUserContext();
   const navigate = useNavigate();
-  const params = useParams();
-  const [bookData, setBookData] = useState<BookData | null>(null);
+  const { bookId } = useParams();
+  const [bookData, setBookData] = useState<BookWithComments | null>(null);
   const [rate, setRate] = useState<number>(1);
   const [content, setContnet] = useState<string>("");
 
   useEffect(() => {
-    const { bookId } = params;
-    fetchBookData(bookId as string).then((data) => {
-      setBookData(data);
-    });
-  });
+    fetchBookWithComments(bookId as string)
+      .then((data) => {
+        setBookData(data);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        }
+      });
+  }, [bookId]);
 
   async function handleComment(e: React.FormEvent) {
     e.preventDefault();
-    const { bookId } = params;
     try {
-      await api.post(
-        `/book/${bookId}/comment`,
-        {
-          content,
-          rate,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
+      await createComment(
+        { content, rate },
+        bookId as string,
+        user?.token as string
       );
-      const bookData = await fetchBookData(bookId as string);
+      const bookData = await fetchBookWithComments(bookId as string);
       toast.success("Comentário criado com sucesso!");
       setBookData(bookData);
       setContnet("");
       setRate(1);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
     }
   }
 
   async function handleDeleteComment(commentId: string) {
-    const { bookId } = params;
     if (!confirm("Confirme para deletar")) {
       return;
     }
     try {
-      await api.delete(`/comment/${commentId}`, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      const bookData = await fetchBookData(bookId as string);
+      await deleteComment(commentId, user?.token as string);
+      const bookData = await fetchBookWithComments(bookId as string);
       toast.success("Comentário deletado com sucesso!");
       setBookData(bookData);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
     }
   }
@@ -89,16 +83,12 @@ export function BookDetails() {
       return;
     }
     try {
-      await api.delete(`/book/${bookData?.id}`, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+      await deleteBook(bookId as string, user?.token as string);
       toast.success("Livro deletado com sucesso!");
       navigate("/");
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
     }
   }
@@ -144,47 +134,14 @@ export function BookDetails() {
           </form>
           {bookData.comments.length > 0 &&
             bookData.comments.map((comment) => (
-              <Comment key={comment.id}>
-                <img src={comment.userAvatar ?? DefaultAvatarImage} />
-                <div>
-                  <CommentHeader>
-                    <span>{comment.userName}</span>
-                    <RateStars rate={comment.rate} />
-                  </CommentHeader>
-                  <p>{comment.content}</p>
-                </div>
-                {comment?.userId === user?.id && (
-                  <button onClick={() => handleDeleteComment(comment.id)}>
-                    Deletar
-                  </button>
-                )}
-              </Comment>
+              <Comment
+                key={comment.id}
+                comment={comment}
+                handleDeleteComment={handleDeleteComment}
+              />
             ))}
         </CommentContainer>
       </div>
     </BookDetailsContainer>
   );
-}
-
-type BookData = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  publishedAt: string;
-  imageUrl: string | null;
-  comments: {
-    id: string;
-    content: string;
-    rate: number;
-    userName: string;
-    userAvatar: string | null;
-    userId: string | null;
-  }[];
-};
-
-async function fetchBookData(id: string): Promise<BookData> {
-  const apiResponse = await api.get(`/book/${id}`);
-  const data = apiResponse.data;
-  return data.book;
 }

@@ -1,5 +1,4 @@
-import { AxiosError } from "axios";
-import api from ".";
+import api, { axiosErroHandler } from ".";
 
 export type User = {
   name: string;
@@ -35,7 +34,7 @@ export async function getCurrentUser(input: { token: string }): Promise<User> {
       token: input.token,
     };
   } catch (error: unknown) {
-    throw erroHandler(error);
+    throw axiosErroHandler(error);
   }
 }
 
@@ -53,7 +52,7 @@ export async function updateUserAvatar(
       },
     });
   } catch (error: unknown) {
-    throw erroHandler(error);
+    throw axiosErroHandler(error);
   }
 }
 
@@ -65,7 +64,7 @@ export async function loginUser(input: {
     const response = await api.post("/session", input);
     return { token: response.data.token };
   } catch (error: unknown) {
-    throw erroHandler(error);
+    throw axiosErroHandler(error);
   }
 }
 
@@ -78,13 +77,6 @@ export async function createUser(input: {
     const response = await api.post("/users", input);
     return { userId: response.data.userId };
   } catch (error: unknown) {
-    throw erroHandler(error);
+    throw axiosErroHandler(error);
   }
-}
-
-function erroHandler(error: unknown): Error {
-  if (error instanceof AxiosError && error.response?.data.message) {
-    return new Error(error.response.data.message);
-  }
-  return new Error("Algo deu errado, tente novamente mais tarde");
 }

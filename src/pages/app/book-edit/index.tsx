@@ -8,10 +8,9 @@ import DefaultBookImg from "../../../assets/default-book.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "../../../contexts/user";
 import React, { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import api from "../../../api";
 import { useAuth } from "../../../hooks/use-auth";
+import { getBook, updateBook, type Book } from "../../../api/bookResource";
 
 export function BookEdit() {
   useAuth("admin");
@@ -21,13 +20,13 @@ export function BookEdit() {
   const [book, setBook] = useState<Book | null>(null);
 
   useEffect(() => {
-    fetchBook(bookId as string)
+    getBook(bookId as string)
       .then((data) => {
         setBook(data);
       })
       .catch((error) => {
-        if (error instanceof AxiosError) {
-          toast.error(error.response?.data.massage);
+        if (error instanceof Error) {
+          toast.error(error.message);
         }
       });
   }, []);
@@ -42,8 +41,8 @@ export function BookEdit() {
         navigate(`/book/${book.id}`);
       }
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.massage);
+      if (error instanceof Error) {
+        return toast.error(error.message);
       }
     }
   }
@@ -120,40 +119,4 @@ export function BookEdit() {
       </form>
     </BookEditContainer>
   );
-}
-
-type Book = {
-  id: string;
-  imageUrl: string | null;
-  author: string;
-  title: string;
-  publishedAt: string;
-  description: string;
-};
-
-async function fetchBook(bookId: string): Promise<Book> {
-  const apiResponse = await api.get(`/book/${bookId}`);
-  const data = apiResponse.data.book;
-  return {
-    author: data.author,
-    description: data.description,
-    id: data.id,
-    imageUrl: data.imageUrl,
-    publishedAt: new Date(data.publishedAt).toISOString().split("T")[0],
-    title: data.title,
-  };
-}
-
-async function updateBook(book: Book, token: string): Promise<void> {
-  const requestBody = {
-    author: book.author,
-    title: book.title,
-    description: book.description,
-    publishedAt: book.publishedAt,
-  };
-  await api.put(`/book/${book.id}`, requestBody, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 }

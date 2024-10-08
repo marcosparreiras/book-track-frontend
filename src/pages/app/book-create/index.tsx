@@ -7,10 +7,10 @@ import DefaultBookImg from "../../../assets/default-book.png";
 import { useUserContext } from "../../../contexts/user";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/use-auth";
+import { createBook } from "../../../api/bookResource";
 
 export function BookCreate() {
   useAuth("admin");
@@ -124,31 +124,4 @@ export function BookCreate() {
       </form>
     </BookCreateContainer>
   );
-}
-
-type BookInfo = {
-  author: string;
-  title: string;
-  publishedAt: string;
-  description: string;
-};
-
-async function createBook(
-  book: BookInfo,
-  bookImage: File,
-  token: string
-): Promise<string> {
-  const formData = new FormData();
-  formData.append("author", book.author);
-  formData.append("title", book.title);
-  formData.append("publishedAt", book.publishedAt);
-  formData.append("description", book.description);
-  formData.append("bookImage", bookImage);
-  const apiResponse = await api.post(`/book`, formData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return apiResponse.data.bookId;
 }
