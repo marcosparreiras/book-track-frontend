@@ -14,20 +14,16 @@ import {
   PageNavigation,
   SearchBar,
 } from "./styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUserContext } from "../../../contexts/user";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import DefaultBookImage from "../../../assets/default-book.png";
+import { useAuth } from "../../../hooks/use-auth";
 
 export function Home() {
+  useAuth("user");
   const { user } = useUserContext();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (user === null) {
-      navigate("/signin");
-    }
-  }, [navigate, user]);
 
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState<number>(1);

@@ -17,16 +17,12 @@ import DefaultBookImage from "../../../assets/default-book.png";
 import DefaultAvatarImage from "../../../assets/profile.png";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../hooks/use-auth";
 
 export function BookDetails() {
+  useAuth("user");
   const { user } = useUserContext();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (user === null) {
-      navigate("/signin");
-    }
-  }, [navigate, user]);
-
   const params = useParams();
   const [bookData, setBookData] = useState<BookData | null>(null);
   const [rate, setRate] = useState<number>(1);

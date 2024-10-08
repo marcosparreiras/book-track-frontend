@@ -14,7 +14,6 @@ import { useUserContext } from "../../../contexts/user";
 import DefaultAvatar from "../../../assets/profile.png";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 
 export function AppLayout() {
   const { logout, user, updateAvatar } = useUserContext();
@@ -28,17 +27,17 @@ export function AppLayout() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setIsLoading(true);
     if (!file) {
       return;
     }
+    setIsLoading(true);
     try {
       await updateAvatar(file);
       toast.success("Imagem de perfil alterada com sucesso!");
       setFile(null);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       }
     } finally {
       setIsLoading(false);

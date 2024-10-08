@@ -11,16 +11,12 @@ import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import api from "../../../api";
+import { useAuth } from "../../../hooks/use-auth";
 
 export function BookEdit() {
-  const { user } = useUserContext();
+  useAuth("admin");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!user?.isAdmin) {
-      navigate("/signin");
-    }
-  }, [navigate, user]);
-
+  const { user } = useUserContext();
   const { bookId } = useParams<{ bookId: string }>();
   const [book, setBook] = useState<Book | null>(null);
 

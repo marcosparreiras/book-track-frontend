@@ -1,20 +1,14 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthFormContainer } from "../../_layouts/auth-layout/styles";
 import { ArrowRight } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useUserContext } from "../../../contexts/user";
+import { useAuth } from "../../../hooks/use-auth";
 
 export function SignIn() {
-  const { login, user } = useUserContext();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
-
+  useAuth("not-user");
+  const { login } = useUserContext();
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

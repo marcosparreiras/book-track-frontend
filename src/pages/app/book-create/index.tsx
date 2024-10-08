@@ -6,20 +6,16 @@ import {
 import DefaultBookImg from "../../../assets/default-book.png";
 import { useUserContext } from "../../../contexts/user";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../../api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../hooks/use-auth";
 
 export function BookCreate() {
+  useAuth("admin");
   const { user } = useUserContext();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (user === null) {
-      navigate("/signin");
-    }
-  }, [navigate, user]);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
