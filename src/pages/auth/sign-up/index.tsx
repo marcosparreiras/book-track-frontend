@@ -2,10 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthFormContainer } from "../../_layouts/auth-layout/styles";
 import { ArrowRight } from "phosphor-react";
 import React, { useEffect, useState } from "react";
-import api from "../../../api";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 import { useUserContext } from "../../../contexts/user";
+import { createUser } from "../../../api/userResource";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -30,18 +29,13 @@ export function SignUp() {
           "As senhas não coincidem. Verifique e tente novamente."
         );
       }
-      const requestBody = {
-        name,
-        email,
-        password,
-      };
-      await api.post("/users", requestBody);
+      if (password.length < 6) {
+        throw new Error("A senha deve ter no minimo 6 caracteres.");
+      }
+      await createUser({ name, email, password });
       toast.success("Cadastro realizado com sucesso!");
       navigate(`/signin?email=${email}&password=${password}`);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
-      }
       if (error instanceof Error) {
         return toast.error(error.message);
       }

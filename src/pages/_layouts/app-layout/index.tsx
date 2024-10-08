@@ -34,6 +34,8 @@ export function AppLayout() {
     }
     try {
       await updateAvatar(file);
+      toast.success("Imagem de perfil alterada com sucesso!");
+      setFile(null);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);

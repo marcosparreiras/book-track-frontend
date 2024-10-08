@@ -1,14 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import api from "../api";
-
-type User = {
-  name: string;
-  email: string;
-  avatarUrl?: string | null;
-  token: string;
-  id: string;
-  isAdmin: boolean;
-};
+import {
+  getCurrentUser,
+  loginUser,
+  updateUserAvatar,
+  type User,
+} from "../api/userResource";
 
 interface UserContextProps {
   user: User | null;
@@ -23,11 +19,7 @@ export function UserContextProvider({ children }: React.PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
 
   async function login(email: string, password: string) {
-    const sessionResponse = await api.post("/session", { email, password });
-    const token = sessionResponse.data.token;
-    if (!token) {
-      throw new Error("Algo deu errado, tente novamente mais tarde");
-    }
+    const { token } = await loginUser({ email, password });
     await fecthUserByToken(token);
   }
 
@@ -37,45 +29,20 @@ export function UserContextProvider({ children }: React.PropsWithChildren) {
   }
 
   async function updateAvatar(file: File) {
-    const formData = new FormData();
-    formData.append("avatar", file);
-    await api.patch("/me/avatar", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${user?.token}`,
-      },
-    });
-    setUser((prev) => {
-      if (prev === null) {
-        return prev;
-      }
-      return { ...prev, avatarUrl: URL.createObjectURL(file) };
-    });
+    if (!user) {
+      throw new Error("Não autorizado!");
+    }
+    updateUserAvatar({ avatar: file }, user.token);
+    setUser((prev) => ({
+      ...(prev as User),
+      avatarUrl: URL.createObjectURL(file),
+    }));
     fecthUserByToken(user?.token as string);
   }
 
   async function fecthUserByToken(token: string) {
-    const getUserResponse = await api.get("/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const {
-      name,
-      email: userEmail,
-      avatarUrl,
-      id,
-      isAdmin,
-    } = getUserResponse.data;
-    if (
-      typeof name !== "string" ||
-      typeof userEmail !== "string" ||
-      typeof id !== "string" ||
-      typeof isAdmin !== "boolean"
-    ) {
-      throw new Error("Algo deu errado, tente novamente mais tarde");
-    }
-    setUser({ name, email: userEmail, avatarUrl, token, id, isAdmin });
+    const user = await getCurrentUser({ token });
+    setUser(user);
     localStorage.setItem("@booktrack:token", token);
   }
 

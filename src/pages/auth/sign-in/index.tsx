@@ -3,7 +3,6 @@ import { AuthFormContainer } from "../../_layouts/auth-layout/styles";
 import { ArrowRight } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 import { useUserContext } from "../../../contexts/user";
 
 export function SignIn() {
@@ -37,8 +36,8 @@ export function SignIn() {
     try {
       await login(email, password);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
+      if (error instanceof Error) {
+        return toast.error(error.message);
       }
     } finally {
       setIsLoading(false);
