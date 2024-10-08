@@ -36,6 +36,7 @@ export function SignUp() {
         password,
       };
       await api.post("/users", requestBody);
+      toast.success("Cadastro realizado com sucesso!");
       navigate(`/signin?email=${email}&password=${password}`);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

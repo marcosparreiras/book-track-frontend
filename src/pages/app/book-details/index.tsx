@@ -6,6 +6,7 @@ import {
   InfoItem,
   BookContainer,
   CommentHeader,
+  AdminCommands,
 } from "./styles";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RateStars } from "../../../components/rate-stars";
@@ -55,6 +56,7 @@ export function BookDetails() {
         }
       );
       const bookData = await fetchBookData(bookId as string);
+      toast.success("Comentário criado com sucesso!");
       setBookData(bookData);
       setContnet("");
       setRate(1);
@@ -77,7 +79,27 @@ export function BookDetails() {
         },
       });
       const bookData = await fetchBookData(bookId as string);
+      toast.success("Comentário deletado com sucesso!");
       setBookData(bookData);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      }
+    }
+  }
+
+  async function handleDeleteBook() {
+    if (!confirm("Confirme para deletar!")) {
+      return;
+    }
+    try {
+      await api.delete(`/book/${bookData?.id}`, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      toast.success("Livro deletado com sucesso!");
+      navigate("/");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
@@ -93,7 +115,12 @@ export function BookDetails() {
     <BookDetailsContainer>
       <img src={bookData.imageUrl ?? DefaultBookImage} alt="" />
       <div>
-        <Link to={`/book/${bookData.id}/edit`}>Editar</Link>
+        {user?.isAdmin && (
+          <AdminCommands>
+            <Link to={`/book/${bookData.id}/edit`}>Editar</Link>
+            <button onClick={handleDeleteBook}>Deletar</button>
+          </AdminCommands>
+        )}
         <BookContainer>
           <h1>{bookData.title}</h1>
           <InfoItem>

@@ -17,6 +17,34 @@ export const BookDetailsContainer = styled.div`
     aspect-ratio: 1/1.3;
   }
 
+  @media (max-width: 1200px) {
+    flex-direction: column;
+
+    img {
+      display: block;
+      margin-inline: auto;
+    }
+  }
+`;
+
+export const AdminCommands = styled.div`
+  button {
+    text-decoration: none;
+    padding: 0.5rem;
+    border: 2px solid ${(props) => props.theme["red-500"]};
+    margin-left: 1rem;
+    cursor: pointer;
+    background: ${(props) => props.theme["red-700"]};
+    color: ${(props) => props.theme["gray-100"]};
+    display: inline-block;
+    margin-bottom: 1rem;
+    transition: 500ms;
+  }
+
+  button:hover {
+    background: ${(props) => props.theme["red-500"]};
+  }
+
   a {
     text-decoration: none;
     padding: 0.5rem;
@@ -30,15 +58,6 @@ export const BookDetailsContainer = styled.div`
 
   a:hover {
     background-color: ${(props) => props.theme["green-500"]};
-  }
-
-  @media (max-width: 1200px) {
-    flex-direction: column;
-
-    img {
-      display: block;
-      margin-inline: auto;
-    }
   }
 `;
 

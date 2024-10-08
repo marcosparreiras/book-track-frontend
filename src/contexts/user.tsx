@@ -7,6 +7,7 @@ type User = {
   avatarUrl?: string | null;
   token: string;
   id: string;
+  isAdmin: boolean;
 };
 
 interface UserContextProps {
@@ -59,15 +60,22 @@ export function UserContextProvider({ children }: React.PropsWithChildren) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const { name, email: userEmail, avatarUrl, id } = getUserResponse.data;
+    const {
+      name,
+      email: userEmail,
+      avatarUrl,
+      id,
+      isAdmin,
+    } = getUserResponse.data;
     if (
       typeof name !== "string" ||
       typeof userEmail !== "string" ||
-      typeof id !== "string"
+      typeof id !== "string" ||
+      typeof isAdmin !== "boolean"
     ) {
       throw new Error("Algo deu errado, tente novamente mais tarde");
     }
-    setUser({ name, email: userEmail, avatarUrl, token, id });
+    setUser({ name, email: userEmail, avatarUrl, token, id, isAdmin });
     localStorage.setItem("@booktrack:token", token);
   }
 
