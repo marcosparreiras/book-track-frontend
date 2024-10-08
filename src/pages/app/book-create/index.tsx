@@ -7,7 +7,6 @@ import DefaultBookImg from "../../../assets/default-book.png";
 import { useUserContext } from "../../../contexts/user";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/use-auth";
 import { createBook } from "../../../api/bookResource";
@@ -31,10 +30,6 @@ export function BookCreate() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const token = user?.token;
-      if (!token) {
-        return;
-      }
       if (imageFile === null) {
         toast.info("Não é permitido a criação de livros sem imagem de capa");
         return;
@@ -47,13 +42,13 @@ export function BookCreate() {
           title,
         },
         imageFile,
-        token
+        user?.token as string
       );
       toast.success("Livro adicionado com sucesso!");
       navigate(`/book/${bookId}`);
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.massage);
+      if (error instanceof Error) {
+        return toast.error(error.message);
       }
     } finally {
       setIsLoading(false);
