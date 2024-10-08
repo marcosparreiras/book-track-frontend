@@ -72,6 +72,7 @@ export function Home() {
               }
             }}
           />
+          {user?.isAdmin && <Link to="/book/create">Adicionar Livro</Link>}
         </PageNavigation>
       </HomeSettings>
       <CardsContainer>

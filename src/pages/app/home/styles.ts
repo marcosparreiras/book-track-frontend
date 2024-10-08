@@ -39,10 +39,26 @@ export const SearchBar = styled.label`
 export const PageNavigation = styled.div`
   display: flex;
   gap: 0.5rem;
+  align-items: center;
   cursor: pointer;
 
   svg:hover {
     color: ${(props) => props.theme["green-500"]};
+  }
+
+  a {
+    text-decoration: none;
+    padding: 0.5rem;
+    border: 1px solid ${(props) => props.theme["green-300"]};
+    background: none;
+    color: ${(props) => props.theme["gray-100"]};
+    display: inline-block;
+    margin-bottom: 1rem;
+    transition: 500ms;
+  }
+
+  a:hover {
+    background-color: ${(props) => props.theme["green-500"]};
   }
 `;
 
@@ -73,9 +89,8 @@ export const BookCard = styled.div`
 
   img {
     width: 80%;
-    height: auto;
-    max-height: 270px;
-    object-fit: cover;
+    aspect-ratio: 1/1.4;
+    max-height: 240px;
     display: block;
     margin-inline: auto;
     opacity: 0.8;
